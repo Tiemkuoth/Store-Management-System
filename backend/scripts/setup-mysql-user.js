@@ -5,7 +5,7 @@
  * Creates storeapp user with proper privileges
  * 
  * Usage:
- *   node setup-mysql-user.js
+ *   node backend/scripts/setup-mysql-user.js
  */
 
 import mysql from 'mysql2/promise';

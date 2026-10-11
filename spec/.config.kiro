@@ -26,9 +26,9 @@
   ],
   "components": {
     "server": [
-      "server/index.js - cache invalidation, endpoints",
-      "server/db/db.js - fallback handlers for new fields",
-      "server/db/migrations/001_add_employee_columns.sql - schema"
+      "backend/index.js - cache invalidation, endpoints",
+      "backend/db/db.js - fallback handlers for new fields",
+      "backend/db/migrations/001_add_employee_columns.sql - schema"
     ],
     "client": [
       "src/contexts/DataContext.jsx - polling frequency and entities",

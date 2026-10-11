@@ -1,11 +1,11 @@
 {
-  "watch": ["server"],
+  "watch": ["backend"],
   "ext": "js,mjs,cjs",
   "ignore": [
-    "server/db/fallback-store.json",
+    "backend/db/fallback-store.json",
     "node_modules/**",
-    "dist/**",
-    "src/**"
+    "frontend/dist/**",
+    "frontend/src/**"
   ],
   "delay": 500
 }

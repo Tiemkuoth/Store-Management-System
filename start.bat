@@ -6,7 +6,7 @@ echo ==========================================
 echo.
 
 :: Start backend in a new window
-start "Backend Server" cmd /k "cd /d %~dp0 && node server/index.js"
+start "Backend Server" cmd /k "cd /d %~dp0 && npm run server"
 
 :: Wait for the backend to complete its database startup retries
 timeout /t 2 /nobreak >nul

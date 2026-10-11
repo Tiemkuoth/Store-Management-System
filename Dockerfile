@@ -1,7 +1,7 @@
 # Multi-stage build for Store Management System
 
 # Stage 1: Build frontend
-FROM node:16-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Runtime environment
-FROM node:16-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Install curl for healthchecks
@@ -21,17 +21,17 @@ COPY package*.json ./
 # Install production dependencies only
 RUN npm ci --only=production
 
-# Copy server code
-COPY server ./server
+# Copy backend code
+COPY backend ./backend
 
 # Copy built frontend
-COPY --from=frontend-builder /app/dist ./public
+COPY --from=frontend-builder /app/frontend/dist ./public
 
 # Copy database schema
-COPY server/db/schema.sql ./server/db/
+COPY backend/db/schema.sql ./backend/db/
 
 # Create logs directory
-RUN mkdir -p logs public/avatars
+RUN mkdir -p logs public/ backend/public/avatars backend/public/uploads
 
 # Expose port
 EXPOSE 5000
@@ -41,4 +41,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:5000/api/health || exit 1
 
 # Start application
-CMD ["node", "server/index.js"]
+CMD ["node", "backend/index.js"]

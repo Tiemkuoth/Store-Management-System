@@ -3,7 +3,7 @@
  * Inserts sample data for development and testing
  * 
  * Usage:
- *   node server/scripts/seed-database.js [--clean]
+ *   node backend/scripts/seed-database.js [--clean]
  * 
  * Options:
  *   --clean   Delete all data before seeding (WARNING: data loss!)
@@ -489,7 +489,7 @@ async function main() {
   if (shouldShowHelp) {
     console.log(`
 Database Seeding Script
-Usage: node server/scripts/seed-database.js [--clean] [--help]
+Usage: node backend/scripts/seed-database.js [--clean] [--help]
 
 Options:
   --clean   Delete all data before seeding (WARNING: data loss!)

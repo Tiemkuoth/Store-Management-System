@@ -588,7 +588,7 @@ export default function App() {
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
                   Start the server: open a terminal in the project folder and run{' '}
-                  <code style={{ background: 'rgba(0,0,0,0.08)', padding: '1px 6px', borderRadius: '4px', fontFamily: 'monospace' }}>node server/index.js</code>
+                  <code style={{ background: 'rgba(0,0,0,0.08)', padding: '1px 6px', borderRadius: '4px', fontFamily: 'monospace' }}>npm run server</code>
                   {' '}— auto-reconnecting in {retryCountdown}s
                 </div>
               </div>
@@ -822,7 +822,6 @@ export default function App() {
     </div>
   );
 }
-
 
 
 

@@ -1,4 +1,4 @@
-import { getPool, initializeDatabase } from '../server/db/db.js';
+import { getPool, initializeDatabase } from '../backend/db/db.js';
 
 async function testAutoSync() {
   console.log('Testing Employee Auto-Sync functionality...');

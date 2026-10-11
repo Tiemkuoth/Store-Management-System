@@ -14,7 +14,7 @@ services:
       - "127.0.0.1:${DB_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./server/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - store-network
     healthcheck:
@@ -47,8 +47,8 @@ services:
         condition: service_healthy
     volumes:
       - ./logs:/app/logs
-      - ./public/avatars:/app/public/avatars
-      - ./server/db/fallback-store.json:/app/server/db/fallback-store.json
+      - ./backend/public/avatars:/app/backend/public/avatars
+      - ./backend/db/fallback-store.json:/app/backend/db/fallback-store.json
     networks:
       - store-network
     restart: unless-stopped

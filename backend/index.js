@@ -357,11 +357,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ── Ensure avatars upload directory exists ────────────────────
-const AVATARS_DIR = path.join(__dirname, '..', 'public', 'avatars');
+const AVATARS_DIR = path.join(__dirname, 'public', 'avatars');
 if (!fs.existsSync(AVATARS_DIR)) fs.mkdirSync(AVATARS_DIR, { recursive: true });
 
 // ── Ensure uploads directory exists ────────────────────────────
-const UPLOADS_DIR = path.join(__dirname, '..', 'public', 'uploads');
+const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 app.use(helmet({
@@ -420,7 +420,7 @@ app.post('/api/system/reset-rate-limit', requireAuth, requirePermission('system:
 });
 
 // Serve uploaded avatar images as static files
-app.use('/avatars', express.static(path.join(__dirname, '..', 'public', 'avatars')));
+app.use('/avatars', express.static(AVATARS_DIR));
 app.use(express.json({ limit: '6mb' }));
 app.use((err, req, res, next) => {
   if (err.type === 'entity.too.large') {
@@ -1131,10 +1131,10 @@ app.delete('/api/auth/avatar', requireAuth, async (req, res) => {
   try {
     const [[existing]] = await getPool().query('SELECT avatar_url FROM users WHERE id=?', [req.user.id]);
     if (existing?.avatar_url && existing.avatar_url.startsWith('/avatars/')) {
-      const oldFile = path.join(__dirname, '..', 'public', existing.avatar_url);
+      const oldFile = path.join(__dirname, 'public', existing.avatar_url);
       // SECURITY: Verify the normalized path is still within avatars directory
       const normalizedPath = path.normalize(oldFile);
-      const avatarsDir = path.normalize(path.join(__dirname, '..', 'public', 'avatars'));
+      const avatarsDir = path.normalize(AVATARS_DIR);
       if (normalizedPath.startsWith(avatarsDir) && fs.existsSync(oldFile)) {
         fs.unlinkSync(oldFile);
       }
@@ -2839,10 +2839,10 @@ app.get('/api/backups/:id/download', requireAuth, requirePermission('system:conf
       return res.status(400).json({ error: 'Invalid backup filename format' });
     }
 
-    const filePath = path.join(__dirname, '..', 'server', 'backups', b.file_name);
+    const filePath = path.join(__dirname, 'backups', b.file_name);
 
     // SECURITY: Prevent path traversal - ensure normalized path is within backups directory
-    const backupsDir = path.normalize(path.join(__dirname, '..', 'server', 'backups'));
+    const backupsDir = path.normalize(path.join(__dirname, 'backups'));
     const normalizedPath = path.normalize(filePath);
     if (!normalizedPath.startsWith(backupsDir)) {
       return res.status(400).json({ error: 'Invalid backup path' });
@@ -2866,10 +2866,10 @@ app.post('/api/backups/:id/restore', requireAuth, requirePermission('system:conf
       return res.status(400).json({ error: 'Invalid backup filename format' });
     }
 
-    const filePath = path.join(__dirname, '..', 'server', 'backups', b.file_name);
+    const filePath = path.join(__dirname, 'backups', b.file_name);
 
     // SECURITY: Prevent path traversal - ensure normalized path is within backups directory
-    const backupsDir = path.normalize(path.join(__dirname, '..', 'server', 'backups'));
+    const backupsDir = path.normalize(path.join(__dirname, 'backups'));
     const normalizedPath = path.normalize(filePath);
     if (!normalizedPath.startsWith(backupsDir)) {
       return res.status(400).json({ error: 'Invalid backup path' });
@@ -2906,10 +2906,10 @@ app.delete('/api/backups/:id', requireAuth, requirePermission('system:configure'
       return res.status(400).json({ error: 'Invalid backup filename format' });
     }
 
-    const filePath = path.join(__dirname, '..', 'server', 'backups', b.file_name);
+    const filePath = path.join(__dirname, 'backups', b.file_name);
 
     // SECURITY: Prevent path traversal - ensure normalized path is within backups directory
-    const backupsDir = path.normalize(path.join(__dirname, '..', 'server', 'backups'));
+    const backupsDir = path.normalize(path.join(__dirname, 'backups'));
     const normalizedPath = path.normalize(filePath);
     if (!normalizedPath.startsWith(backupsDir)) {
       return res.status(400).json({ error: 'Invalid backup path' });
@@ -3148,7 +3148,7 @@ const saveUploadedImage = (file, userId) => {
   fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer, { flag: 'wx' });
   return { filename };
 };
-app.use('/uploads', express.static(path.join(__dirname, '..', 'public', 'uploads')));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // ── Employee Document Upload ──────────────────────────────────
 app.post('/api/employees/:id/upload-document', requireAuth, requirePermission('employee:update'), upload.single('document'), async (req, res) => {
@@ -3207,7 +3207,7 @@ app.post('/api/import/materials', requireAuth, requirePermission('material:creat
 
 // ── DB Backup (mysqldump) ─────────────────────────────────────
 app.post('/api/backup/trigger', requireAuth, requirePermission('system:configure'), (req, res) => {
-  const backupDir = path.join(__dirname, '..', 'server', 'backups');
+  const backupDir = path.join(__dirname, 'backups');
   if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
   const filename = `backup_${Date.now()}.sql`;
   const filepath = path.join(backupDir, filename);
@@ -4716,12 +4716,10 @@ initializeDatabase().then(async () => {
     const fallbackActive = getIsUsingFallback();
     console.log(`📊 DB Mode: ${fallbackActive ? 'Fallback JSON Store' : 'MySQL Connected'}`);
     if (fallbackActive) {
-      console.log('⚠️ Running in fallback mode. Data is persisted to server/db/fallback-store.json until MySQL becomes available.');
+      console.log('⚠️ Running in fallback mode. Data is persisted to backend/db/fallback-store.json until MySQL becomes available.');
     }
   });
 });
-
-
 
 
 

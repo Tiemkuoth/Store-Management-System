@@ -88,7 +88,7 @@ async function generate() {
   const outPath = path.join(__dirname, 'db', 'fallback-store.json');
   fs.writeFileSync(outPath, JSON.stringify(store, null, 2), 'utf8');
 
-  console.log('✅ fallback-store.json written to server/db/');
+  console.log('✅ fallback-store.json written to backend/db/');
   console.log('Users:     ' + store.users.length);
   console.log('Materials: ' + store.materials.length);
   store.users.forEach(u => console.log(`  ${u.role.padEnd(20)} ${u.username}`));
