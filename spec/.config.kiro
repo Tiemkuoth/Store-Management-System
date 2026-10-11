@@ -1,0 +1,70 @@
+{
+  "specName": "Store Management System - Real-time Data Updates",
+  "description": "Bugfix for DirectorPanel stats not updating when adding employees, new items not appearing in lists, and database schema missing columns",
+  "category": "bugfix",
+  "priority": "high",
+  "estimatedDays": 1,
+  "requirementsFile": "../bugfix.md",
+  "designPhase": {
+    "enabled": true,
+    "description": "Design cache invalidation strategy, polling architecture, component async patterns"
+  },
+  "implementationPhase": {
+    "enabled": true,
+    "description": "Implement fixes across server (cache, endpoints) and client (DataContext, form components, database schema)"
+  },
+  "testingPhase": {
+    "enabled": true,
+    "description": "Test employee add flow, stats updates, new items visibility, database operations"
+  },
+  "deliverables": [
+    "Cache invalidation on mutations",
+    "Real-time polling for employees/suppliers/categories",
+    "Async/await in form components",
+    "Database schema with new employee columns",
+    "Fallback JSON store support for new fields"
+  ],
+  "components": {
+    "server": [
+      "server/index.js - cache invalidation, endpoints",
+      "server/db/db.js - fallback handlers for new fields",
+      "server/db/migrations/001_add_employee_columns.sql - schema"
+    ],
+    "client": [
+      "src/contexts/DataContext.jsx - polling frequency and entities",
+      "src/components/EmployeeDeptManager.jsx - async form handling",
+      "src/components/SupplierManager.jsx - async form handling",
+      "src/components/MaterialManager.jsx - async form handling"
+    ]
+  },
+  "successMetrics": [
+    "Employee count updates within 1-2 seconds of adding new employee",
+    "New items appear in lists within 1-2 seconds",
+    "Form modal closes only after successful API response",
+    "All new employee fields (gender, position, document_url) persist to database",
+    "No SQL errors when adding employees with new fields"
+  ],
+  "knownIssues": [
+    "MySQL not currently connected - system running in fallback JSON mode",
+    "Migration file needs proper format (no comments, plain SQL only)",
+    "Form components had race conditions due to missing awaits"
+  ],
+  "decisions": {
+    "cacheStrategy": {
+      "chosen": "invalidateOnMutation + reducedTTL + fasterPolling",
+      "rationale": "Single approach insufficient; needed both cache invalidation and increased polling frequency"
+    },
+    "asyncTiming": {
+      "chosen": "await async operations before state cleanup",
+      "rationale": "Prevents race conditions where modal closes before data refreshes"
+    },
+    "pollingScope": {
+      "chosen": "include employees/suppliers/categories in 5s lightweight poll",
+      "rationale": "Ensures new items visible immediately; only full refresh was too slow (15s minimum)"
+    },
+    "fallbackMode": {
+      "chosen": "use JSON store with updated handlers vs forcing MySQL",
+      "rationale": "Pragmatic approach; system fully functional in fallback, all new fields supported"
+    }
+  }
+}

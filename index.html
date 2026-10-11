@@ -1,0 +1,29 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/jpeg" href="/logo.jpg" />
+  <link rel="apple-touch-icon" href="/logo.jpg" />
+  <meta name="theme-color" content="#9333ea" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Management System</title>
+
+  <!-- Preload LCP image (logo.jpg) to avoid JS discovery delay -->
+  <link rel="preload" href="/logo.jpg" as="image" />
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Load fonts with font-display: swap to prevent render-blocking -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
